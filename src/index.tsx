@@ -27,7 +27,8 @@ export const Editor = ({ width, height, editable }: Props) => {
 
   return (
     <div
-      style={{ width: `${width}px`, height: `${height}px` }}
+      data-testid='editor'
+      style={{ width: width, height: height }}
       className={styles.editor}
     >
       <div

@@ -67,10 +67,10 @@
     }
   },
   "lint-staged": {
-    "src/**/*.ts*": [
+    "src/**/*.ts|src/**/*.tsx": [
       "eslint --max-warnings 0"
     ],
-    "example/src/**/*.ts*": [
+    "example/src/**/*.ts|example/src/**/*.tsx": [
       "eslint --max-warnings 0"
     ]
   }
