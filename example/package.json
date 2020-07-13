@@ -7,24 +7,36 @@
     "start": "node ../node_modules/react-scripts/bin/react-scripts.js start",
     "build": "node ../node_modules/react-scripts/bin/react-scripts.js build",
     "test": "node ../node_modules/react-scripts/bin/react-scripts.js test",
-    "eject": "node ../node_modules/react-scripts/bin/react-scripts.js eject"
+    "eject": "node ../node_modules/react-scripts/bin/react-scripts.js eject",
+    "e2e": "jest -c jest-e2e.config.js"
   },
   "dependencies": {
     "@testing-library/jest-dom": "file:../node_modules/@testing-library/jest-dom",
     "@testing-library/react": "file:../node_modules/@testing-library/react",
     "@testing-library/user-event": "file:../node_modules/@testing-library/user-event",
+    "@types/expect-puppeteer": "^4.4.3",
     "@types/jest": "file:../node_modules/@types/jest",
+    "@types/jest-environment-puppeteer": "^4.3.2",
     "@types/node": "file:../node_modules/@types/node",
+    "@types/pixelmatch": "^5.2.1",
+    "@types/pngjs": "^3.4.2",
+    "@types/puppeteer": "^3.0.1",
     "@types/react": "file:../node_modules/@types/react",
     "@types/react-dom": "file:../node_modules/@types/react-dom",
+    "haiku-light-editor": "file:..",
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
     "react-scripts": "file:../node_modules/react-scripts",
-    "typescript": "file:../node_modules/typescript",
-    "haiku-light-editor": "file:.."
+    "typescript": "file:../node_modules/typescript"
   },
   "devDependencies": {
-    "@babel/plugin-syntax-object-rest-spread": "^7.8.3"
+    "@babel/plugin-syntax-object-rest-spread": "^7.8.3",
+    "cross-env": "file:../node_modules/cross-env",
+    "jest": "^26.1.0",
+    "jest-puppeteer": "^4.4.0",
+    "pixelmatch": "^5.2.1",
+    "pngjs": "^5.0.0",
+    "puppeteer": "^5.1.0"
   },
   "eslintConfig": {
     "extends": "react-app"
