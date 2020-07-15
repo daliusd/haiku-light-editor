@@ -9,12 +9,17 @@ describe('Editor', () => {
   })
 
   it('renders empty square', () => {
+    const settings = {
+      width: 100,
+      height: 100
+    }
+
     const editable = {
       width: 20,
       height: 20
     }
 
-    render(<Editor width={100} height={100} editable={editable} />)
+    render(<Editor settings={settings} editable={editable} />)
     expect(screen.getByTestId('editor')).toMatchSnapshot()
   })
 })

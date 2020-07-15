@@ -19,7 +19,7 @@ function compareScreenshots(fileName) {
     diff.data,
     img1.width,
     img1.height,
-    { threshold: 0.1 }
+    { threshold: 0.05 }
   )
 
   expect(numDiffPixels).toEqual(0)

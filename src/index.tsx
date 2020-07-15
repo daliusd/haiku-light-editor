@@ -1,19 +1,24 @@
 import * as React from 'react'
 import styles from './styles.module.css'
 
+export interface Settings {
+  width: number
+  height: number
+}
+
 export interface Editable {
   width: number
   height: number
 }
 
 interface Props {
-  width: number
-  height: number
+  settings: Settings
   editable: Editable
 }
 
-export const Editor = ({ width, height, editable }: Props) => {
+export const Editor = ({ settings, editable }: Props) => {
   // TODO: 10px margin default now
+  const { width, height } = settings
   const ppmm = Math.min(
     (width - 20) / editable.width,
     (height - 20) / editable.height
