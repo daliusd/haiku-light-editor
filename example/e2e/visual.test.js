@@ -62,6 +62,9 @@ describe('👀 screenshots are correct', function () {
     it('/black', async function () {
       return await takeAndCompareScreenshot('black', 'wide')
     })
+    it('/image', async function () {
+      return await takeAndCompareScreenshot('image', 'wide')
+    })
   })
 
   describe('narrow screen', function () {
@@ -73,6 +76,9 @@ describe('👀 screenshots are correct', function () {
     })
     it('/black', async function () {
       return await takeAndCompareScreenshot('black', 'narrow')
+    })
+    it('/image', async function () {
+      return await takeAndCompareScreenshot('image', 'narrow')
     })
   })
 })

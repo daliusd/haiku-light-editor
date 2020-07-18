@@ -23,3 +23,25 @@ exports[`Editor renders empty square in black background 1`] = `
   />
 </div>
 `;
+
+exports[`Editor renders image properly 1`] = `
+<div
+  class="editor"
+  data-testid="editor"
+  style="width: 100px; height: 100px; background: rgb(238, 238, 238);"
+>
+  <div
+    style="width: 80px; height: 80px; left: 10px; top: 10px; position: absolute; background: rgb(255, 255, 255);"
+  >
+    <div
+      style="position: absolute; top: 8px; left: 8px; width: 20px; height: 20px; transform: rotate(0rad);"
+    >
+      <img
+        alt=""
+        src="/test.png"
+        style="width: 20px; height: 20px; position: absolute; left: 0px; top: 0px; transform: scaleX(1) rotate(0deg) translate(0px, 0px);"
+      />
+    </div>
+  </div>
+</div>
+`;
