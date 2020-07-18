@@ -49,7 +49,7 @@ interface Props {
   editable: Editable;
 }
 
-export const Editor = ({ settings, editable }: Props): JSX.Element => {
+export const Editor = ({ settings, editable }: Props) => {
   const { width, height, backgroundColor } = settings;
   const margins = settings.margins || marginsDefaults;
   const ppmm = Math.min(
