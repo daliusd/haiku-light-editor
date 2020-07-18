@@ -10,6 +10,7 @@ export interface Settings {
   width: number
   height: number
   margins?: Margins
+  backgroundColor?: string
 }
 
 const marginsDefaults: Margins = {
@@ -28,7 +29,7 @@ interface Props {
 }
 
 export const Editor = ({ settings, editable }: Props) => {
-  const { width, height } = settings
+  const { width, height, backgroundColor } = settings
   const margins = settings.margins || marginsDefaults
   const ppmm = Math.min(
     (width - margins.horizontal * 2) / editable.width,
@@ -44,7 +45,11 @@ export const Editor = ({ settings, editable }: Props) => {
   return (
     <div
       data-testid='editor'
-      style={{ width: width, height: height }}
+      style={{
+        width: width,
+        height: height,
+        background: backgroundColor || '#eeeeee'
+      }}
       className={styles.editor}
     >
       <div

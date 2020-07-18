@@ -4,7 +4,19 @@ exports[`Editor renders empty square 1`] = `
 <div
   class="editor"
   data-testid="editor"
-  style="width: 100px; height: 100px;"
+  style="width: 100px; height: 100px; background: rgb(238, 238, 238);"
+>
+  <div
+    style="width: 80px; height: 80px; left: 10px; top: 10px; position: absolute; background: rgb(255, 255, 255);"
+  />
+</div>
+`;
+
+exports[`Editor renders empty square in black background 1`] = `
+<div
+  class="editor"
+  data-testid="editor"
+  style="width: 100px; height: 100px; background: rgb(0, 0, 0);"
 >
   <div
     style="width: 80px; height: 80px; left: 10px; top: 10px; position: absolute; background: rgb(255, 255, 255);"
