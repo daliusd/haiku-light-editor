@@ -106,6 +106,27 @@ const App = () => {
             );
           }}
         ></Route>
+        <Route
+          path='/imagerf:rot:flip'
+          render={({ match }) => {
+            console.log(match.params);
+            return (
+              <Editor
+                settings={settings}
+                editable={{
+                  ...editable,
+                  fields: [
+                    {
+                      ...imageField,
+                      imageRotation: parseInt(match.params.rot, 10),
+                      imageFlip: match.params.flip === '1'
+                    }
+                  ]
+                }}
+              />
+            );
+          }}
+        ></Route>
         <Route path='/'></Route>
       </Switch>
     </Router>

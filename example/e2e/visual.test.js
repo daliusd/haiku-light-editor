@@ -71,6 +71,13 @@ describe('👀 screenshots are correct', function () {
         await takeAndCompareScreenshot(`exifl${i}`, 'wide');
       }
     });
+    it('/imagerf', async function () {
+      for (let rot = 0; rot < 4; rot++) {
+        for (let flip = 0; flip < 2; flip++) {
+          await takeAndCompareScreenshot(`imagerf${rot}${flip}`, 'wide');
+        }
+      }
+    });
   });
 
   describe('narrow screen', function () {
