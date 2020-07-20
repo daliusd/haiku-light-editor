@@ -10,26 +10,26 @@ const settings: Settings = {
 };
 
 const editable: Editable = {
-  width: 20,
-  height: 20
+  width: 20, // width in units, e.g mm
+  height: 20 // width in units, e.g. mm
 };
 
 const imageField: ImageField = {
   type: 'image',
   id: '1',
-  x: 5,
-  y: 5,
-  width: 10,
-  height: 10,
-  angle: 0,
-  scale: 0.05,
-  cx: 0,
-  cy: 0,
-  imageWidth: 200,
-  imageHeight: 200,
+  x: 5, // position x in units
+  y: 5, // position y in units
+  width: 10, // field width in units, e.g. mm
+  height: 10, // field heights in units, e.g. mm
+  angle: 0, // angle in radians
+  scale: 0.05, // image scale
+  cx: 0, // content shift in units
+  cy: 0, // content shifts in units
+  imageWidth: 200, // image width in px
+  imageHeight: 200, // image height in px
   imageUrl: '/wolf.png',
   imageFlip: false,
-  imageRotation: 0
+  imageRotation: 0 // image rotation
 };
 
 const App = () => {
