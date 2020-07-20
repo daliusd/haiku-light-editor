@@ -109,7 +109,6 @@ const App = () => {
         <Route
           path='/imagerf:rot:flip'
           render={({ match }) => {
-            console.log(match.params);
             return (
               <Editor
                 settings={settings}
@@ -120,6 +119,25 @@ const App = () => {
                       ...imageField,
                       imageRotation: parseInt(match.params.rot, 10),
                       imageFlip: match.params.flip === '1'
+                    }
+                  ]
+                }}
+              />
+            );
+          }}
+        ></Route>
+        <Route
+          path='/imageangle:ang'
+          render={({ match }) => {
+            return (
+              <Editor
+                settings={settings}
+                editable={{
+                  ...editable,
+                  fields: [
+                    {
+                      ...imageField,
+                      angle: (parseInt(match.params.ang, 10) / 180) * Math.PI
                     }
                   ]
                 }}

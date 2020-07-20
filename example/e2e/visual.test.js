@@ -78,6 +78,11 @@ describe('👀 screenshots are correct', function () {
         }
       }
     });
+    it('/imageangle', async function () {
+      for (let i = 0; i < 24; i++) {
+        await takeAndCompareScreenshot(`imageangle${i * 15}`, 'wide');
+      }
+    });
   });
 
   describe('narrow screen', function () {
