@@ -1,49 +1,81 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { PanStartCallback, PanMoveCallback } from './types';
 
 export function usePannableRef(
-  panStartCallback: PanStartCallback,
-  panMoveCallback: PanMoveCallback
+  panStartCallback: PanStartCallback | undefined,
+  panMoveCallback: PanMoveCallback | undefined
 ) {
   const ref = useRef<HTMLElement | null>(null);
+  const handleClickRef = useRef<EventListener | null>(null);
+  const handleMousedownRef = useRef<EventListener | null>(null);
+  const handleTouchstartRef = useRef<EventListener | null>(null);
 
-  const touchHandled = useRef<boolean>(false);
-  const x = useRef<number>(0);
-  const y = useRef<number>(0);
-  const pinchHypot = useRef<number | undefined>(undefined);
-  const pinchX = useRef<number>(0);
-  const pinchY = useRef<number>(0);
+  const panStartCallbackRef = useRef<PanStartCallback | undefined>(
+    panStartCallback
+  );
+  const panMoveCallbackRef = useRef<PanMoveCallback | undefined>(
+    panMoveCallback
+  );
 
-  const handleClick = useCallback((event: MouseEvent) => {
-    event.stopPropagation();
-  }, []);
+  useEffect(() => {
+    panStartCallbackRef.current = panStartCallback;
+  }, [panStartCallback]);
 
-  const handlePanMove = useCallback(
-    (
+  useEffect(() => {
+    panMoveCallbackRef.current = panMoveCallback;
+  }, [panMoveCallback]);
+
+  const setRef = useCallback((node: HTMLElement | null) => {
+    if (ref.current) {
+      if (handleClickRef.current) {
+        ref.current.removeEventListener('click', handleClickRef.current);
+      }
+      if (handleMousedownRef.current) {
+        ref.current.removeEventListener(
+          'mousedown',
+          handleMousedownRef.current
+        );
+      }
+      if (handleTouchstartRef.current) {
+        ref.current.removeEventListener(
+          'touchstart',
+          handleTouchstartRef.current
+        );
+      }
+    }
+
+    let touchHandled = false;
+    let x = 0;
+    let y = 0;
+    let pinchHypot: undefined | number;
+    let pinchX = 0;
+    let pinchY = 0;
+
+    function handleClick(event: MouseEvent) {
+      event.stopPropagation();
+    }
+
+    function handlePanMove(
       eventPos: MouseEvent | Touch,
       event: MouseEvent | TouchEvent,
       touch: boolean
-    ) => {
+    ) {
       const ctrlKey = event.ctrlKey;
-      const dx = eventPos.clientX - x.current;
-      const dy = eventPos.clientY - y.current;
-      x.current = eventPos.clientX;
-      y.current = eventPos.clientY;
+      const dx = eventPos.clientX - x;
+      const dy = eventPos.clientY - y;
+      x = eventPos.clientX;
+      y = eventPos.clientY;
 
-      panMoveCallback(x.current, y.current, dx, dy, touch, ctrlKey, event);
-    },
-    [panMoveCallback]
-  );
+      if (panMoveCallbackRef.current) {
+        panMoveCallbackRef.current(x, y, dx, dy, touch, ctrlKey, event);
+      }
+    }
 
-  const handleMousemove = useCallback(
-    (event: MouseEvent) => {
+    function handleMousemove(event: MouseEvent) {
       handlePanMove(event, event, false);
-    },
-    [handlePanMove]
-  );
+    }
 
-  const handleTouchmove = useCallback(
-    (event: TouchEvent) => {
+    function handleTouchmove(event: TouchEvent) {
       if (event.touches.length > 1) {
         const t1 = event.touches[0];
         const t2 = event.touches[1];
@@ -54,78 +86,65 @@ export function usePannableRef(
         const newPinchX = (t1.clientX + t2.clientX) / 2;
         const newPinchY = (t1.clientY + t2.clientY) / 2;
 
-        if (pinchHypot.current !== undefined) {
-          // const delta = newPinchHypot - pinchHypot.current;
-          // ('pinch', {
-          //  delta,
-          //  event,
-          //  x: newPinchX,
-          //  y: newPinchY,
-          //  dx: newPinchX - pinchX.current,
-          //  dy: newPinchY - pinchY.current
-          // });
+        if (pinchHypot !== undefined) {
+          const delta = newPinchHypot - pinchHypot;
+          console.log('pinch', {
+            delta,
+            event,
+            x: newPinchX,
+            y: newPinchY,
+            dx: newPinchX - pinchX,
+            dy: newPinchY - pinchY
+          });
         }
-        pinchHypot.current = newPinchHypot;
-        pinchX.current = newPinchX;
-        pinchY.current = newPinchY;
+        pinchHypot = newPinchHypot;
+        pinchX = newPinchX;
+        pinchY = newPinchY;
 
         return;
       }
 
       handlePanMove(event.changedTouches[0], event, true);
-    },
-    [handlePanMove]
-  );
+    }
 
-  const handlePanEnd = useCallback(
-    (event: MouseEvent | Touch, _touch: boolean) => {
-      x.current = event.clientX;
-      y.current = event.clientY;
+    function handlePanEnd(event: MouseEvent | Touch, _touch: boolean) {
+      x = event.clientX;
+      y = event.clientY;
 
       // ('panend', {
       //  x,
       //  y,
       //  touch
       // });
-    },
-    []
-  );
+    }
 
-  const handleMouseup = useCallback(
-    (event: MouseEvent) => {
+    function handleMouseup(event: MouseEvent) {
       handlePanEnd(event, false);
 
       window.removeEventListener('mousemove', handleMousemove);
-      // window.removeEventListener('mouseup', handleMouseup);
-    },
-    [handleMousemove, handlePanEnd]
-  );
+      window.removeEventListener('mouseup', handleMouseup);
+    }
 
-  const handleTouchend = useCallback(
-    (event: TouchEvent) => {
+    function handleTouchend(event: TouchEvent) {
       handlePanEnd(event.changedTouches[0], true);
 
       window.removeEventListener('touchmove', handleTouchmove);
-      // window.removeEventListener('touchend', handleTouchend);
-    },
-    [handleTouchmove, handlePanEnd]
-  );
+      window.removeEventListener('touchend', handleTouchend);
+    }
 
-  const handlePanStart = useCallback(
-    (event: MouseEvent | Touch, touch: boolean) => {
-      x.current = event.clientX;
-      y.current = event.clientY;
+    function handlePanStart(event: MouseEvent | Touch, touch: boolean) {
+      x = event.clientX;
+      y = event.clientY;
 
-      panStartCallback(x.current, y.current, touch);
-    },
-    [panStartCallback]
-  );
+      if (panStartCallbackRef.current) {
+        panStartCallbackRef.current(x, y, touch);
+      }
+    }
 
-  const handleMousedown = useCallback(
-    (event: MouseEvent) => {
+    function handleMousedown(event: MouseEvent) {
       event.stopPropagation();
-      if (touchHandled.current) {
-        touchHandled.current = false;
+      if (touchHandled) {
+        touchHandled = false;
         return;
       }
       event.preventDefault();
@@ -134,43 +153,35 @@ export function usePannableRef(
 
       window.addEventListener('mousemove', handleMousemove);
       window.addEventListener('mouseup', handleMouseup);
-    },
-    [handleMousemove, handleMouseup, handlePanStart]
-  );
+    }
 
-  const handleTouchstart = useCallback(
-    (event: TouchEvent) => {
-      touchHandled.current = true;
-      pinchHypot.current = undefined;
+    function handleTouchstart(event: TouchEvent) {
+      touchHandled = true;
+      pinchHypot = undefined;
       event.stopPropagation();
 
       handlePanStart(event.changedTouches[0], true);
 
-      window.addEventListener('touchmove', handleTouchmove, { passive: false });
-      window.addEventListener('touchend', handleTouchend, { passive: false });
-    },
-    [handleTouchmove, handleTouchend, handlePanStart]
-  );
+      window.addEventListener('touchmove', handleTouchmove, {
+        passive: false
+      });
+      window.addEventListener('touchend', handleTouchend, {
+        passive: false
+      });
+    }
 
-  const setRef = useCallback(
-    (node: HTMLElement | null) => {
-      if (ref.current) {
-        ref.current.removeEventListener('click', handleClick);
-        ref.current.removeEventListener('mousedown', handleMousedown);
-        ref.current.removeEventListener('touchstart', handleTouchstart);
-      }
+    if (node) {
+      node.addEventListener('click', handleClick);
+      node.addEventListener('mousedown', handleMousedown);
+      node.addEventListener('touchstart', handleTouchstart);
+    }
 
-      if (node) {
-        node.addEventListener('click', handleClick);
-        node.addEventListener('mousedown', handleMousedown);
-        node.addEventListener('touchstart', handleTouchstart);
-      }
-
-      // Save a reference to the node
-      ref.current = node;
-    },
-    [handleClick, handleMousedown, handleTouchstart]
-  );
+    // Save a reference to the node
+    ref.current = node;
+    handleClickRef.current = handleClick as EventListener;
+    handleMousedownRef.current = handleMousedown as EventListener;
+    handleTouchstartRef.current = handleTouchstart as EventListener;
+  }, []);
 
   return setRef;
 }
