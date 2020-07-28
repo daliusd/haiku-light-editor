@@ -60,6 +60,7 @@ export default (props: Props) => {
   return (
     <div
       ref={pannableRef}
+      data-testid={`field-${field.id}`}
       style={{
         position: 'absolute',
         top: y * ppmm,

@@ -34,6 +34,7 @@ exports[`Editor renders image properly 1`] = `
     style="width: 80px; height: 80px; left: 10px; top: 10px; position: absolute; background: rgb(255, 255, 255);"
   >
     <div
+      data-testid="field-1"
       style="position: absolute; top: 8px; left: 8px; width: 20px; height: 20px; transform: rotate(0rad);"
     >
       <img
