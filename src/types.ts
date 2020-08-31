@@ -52,3 +52,14 @@ export type PanMoveCallback = (
   ctrlKey: boolean,
   event: MouseEvent | TouchEvent
 ) => void;
+
+export type PanEndCallback = (x: number, y: number, touch: boolean) => void;
+
+export type PanPinchCallback = (
+  x: number,
+  y: number,
+  dx: number,
+  dy: number,
+  delta: number,
+  event: MouseEvent | TouchEvent
+) => void;

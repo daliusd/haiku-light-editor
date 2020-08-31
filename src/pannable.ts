@@ -1,9 +1,16 @@
 import { useRef, useCallback, useEffect } from 'react';
-import { PanStartCallback, PanMoveCallback } from './types';
+import {
+  PanStartCallback,
+  PanMoveCallback,
+  PanEndCallback,
+  PanPinchCallback
+} from './types';
 
 export function usePannableRef(
   panStartCallback: PanStartCallback | undefined,
-  panMoveCallback: PanMoveCallback | undefined
+  panMoveCallback: PanMoveCallback | undefined,
+  panEndCallback: PanEndCallback | undefined,
+  panPinchCallback: PanPinchCallback | undefined
 ) {
   const ref = useRef<HTMLElement | null>(null);
   const handleClickRef = useRef<EventListener | null>(null);
@@ -16,6 +23,10 @@ export function usePannableRef(
   const panMoveCallbackRef = useRef<PanMoveCallback | undefined>(
     panMoveCallback
   );
+  const panEndCallbackRef = useRef<PanEndCallback | undefined>(panEndCallback);
+  const panPinchCallbackRef = useRef<PanPinchCallback | undefined>(
+    panPinchCallback
+  );
 
   useEffect(() => {
     panStartCallbackRef.current = panStartCallback;
@@ -24,6 +35,14 @@ export function usePannableRef(
   useEffect(() => {
     panMoveCallbackRef.current = panMoveCallback;
   }, [panMoveCallback]);
+
+  useEffect(() => {
+    panEndCallbackRef.current = panEndCallback;
+  }, [panEndCallback]);
+
+  useEffect(() => {
+    panPinchCallbackRef.current = panPinchCallback;
+  }, [panPinchCallback]);
 
   const setRef = useCallback((node: HTMLElement | null) => {
     if (ref.current) {
@@ -88,14 +107,16 @@ export function usePannableRef(
 
         if (pinchHypot !== undefined) {
           const delta = newPinchHypot - pinchHypot;
-          console.log('pinch', {
-            delta,
-            event,
-            x: newPinchX,
-            y: newPinchY,
-            dx: newPinchX - pinchX,
-            dy: newPinchY - pinchY
-          });
+          if (panPinchCallbackRef.current) {
+            panPinchCallbackRef.current(
+              newPinchX,
+              newPinchY,
+              newPinchX - pinchX,
+              newPinchY - pinchY,
+              delta,
+              event
+            );
+          }
         }
         pinchHypot = newPinchHypot;
         pinchX = newPinchX;
@@ -107,15 +128,13 @@ export function usePannableRef(
       handlePanMove(event.changedTouches[0], event, true);
     }
 
-    function handlePanEnd(event: MouseEvent | Touch, _touch: boolean) {
+    function handlePanEnd(event: MouseEvent | Touch, touch: boolean) {
       x = event.clientX;
       y = event.clientY;
 
-      // ('panend', {
-      //  x,
-      //  y,
-      //  touch
-      // });
+      if (panEndCallbackRef.current) {
+        panEndCallbackRef.current(x, y, touch);
+      }
     }
 
     function handleMouseup(event: MouseEvent) {
