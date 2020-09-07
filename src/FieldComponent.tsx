@@ -49,7 +49,12 @@ export default (props: Props) => {
     [ppmm]
   );
 
-  const pannableRef = usePannableRef(handlePanStart, handlePanMove);
+  const pannableRef = usePannableRef(
+    handlePanStart,
+    handlePanMove,
+    undefined,
+    undefined
+  );
   const imageShift =
     field.imageRotation % 2 === 1
       ? ((field.imageRotation === 3 ? -1 : 1) *
