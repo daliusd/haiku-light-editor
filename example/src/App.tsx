@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { Editor, Editable, Settings, ImageField } from 'haiku-light-editor';
@@ -11,7 +11,8 @@ const settings: Settings = {
 
 const editable: Editable = {
   width: 20, // width in units, e.g mm
-  height: 20 // width in units, e.g. mm
+  height: 20, // width in units, e.g. mm
+  fields: [],
 };
 
 const imageField: ImageField = {
@@ -31,6 +32,19 @@ const imageField: ImageField = {
   imageFlip: false,
   imageRotation: 0 // image rotation
 };
+
+const DynamicEditor = (props: { settings: Settings; editable: Editable }) => {
+  const [editable, setEditable] = useState(props.editable);
+
+  return (
+    <Editor
+      settings={props.settings}
+      editable={editable}
+      onChange={setEditable}
+    />
+  );
+};
+
 
 const App = () => {
   return (
@@ -145,7 +159,12 @@ const App = () => {
             );
           }}
         ></Route>
-        <Route path='/'></Route>
+        <Route path='/'>
+          <DynamicEditor
+            settings={settings}
+            editable={{ ...editable, fields: [imageField] }}
+          />
+        </Route>
       </Switch>
     </Router>
   );

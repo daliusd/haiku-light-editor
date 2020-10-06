@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Editor, ImageField, Settings, Editable } from '.';
 import { render, screen, fireEvent } from '@testing-library/react';
+
+const DynamicEditor = (props: { settings: Settings; editable: Editable }) => {
+  const [editable, setEditable] = useState(props.editable);
+
+  return (
+    <Editor
+      settings={props.settings}
+      editable={editable}
+      onChange={setEditable}
+    />
+  );
+};
 
 describe('FieldComponent', () => {
   const settings: Settings = {
@@ -11,7 +23,8 @@ describe('FieldComponent', () => {
 
   const editable: Editable = {
     width: 80,
-    height: 80
+    height: 80,
+    fields: []
   };
 
   const imageField: ImageField = {
@@ -34,7 +47,7 @@ describe('FieldComponent', () => {
 
   it('image can be moved using mouse', () => {
     render(
-      <Editor
+      <DynamicEditor
         settings={settings}
         editable={{ ...editable, fields: [imageField] }}
       />
@@ -51,7 +64,7 @@ describe('FieldComponent', () => {
 
   it('image can be moved using touch', () => {
     render(
-      <Editor
+      <DynamicEditor
         settings={settings}
         editable={{ ...editable, fields: [imageField] }}
       />

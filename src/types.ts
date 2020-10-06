@@ -33,12 +33,13 @@ export type Field = ImageField;
 export interface Editable {
   width: number;
   height: number;
-  fields?: Field[];
+  fields: Field[];
 }
 
 export interface Props {
   settings: Settings;
   editable: Editable;
+  onChange?: (e: Editable) => void;
 }
 
 export type PanStartCallback = (x: number, y: number, touch: boolean) => void;

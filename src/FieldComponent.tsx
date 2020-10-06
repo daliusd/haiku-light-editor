@@ -1,17 +1,20 @@
-import React, { useRef, useCallback, useState } from 'react';
-import { Field, PanStartCallback, PanMoveCallback } from './types';
+import React, { useRef, useCallback } from 'react';
+import { Field, PanStartCallback, PanMoveCallback, Editable } from './types';
 import { usePannableRef } from './pannable';
 
 interface Props {
+  editable: Editable;
   field: Field;
   ppmm: number;
+  onChange?: (e: Editable) => void;
 }
 
-export default (props: Props) => {
-  const { field, ppmm } = props;
-  const [x, setX] = useState<number>(field.x);
-  const [y, setY] = useState<number>(field.y);
-
+const MovePannableRef = (
+  field: Field,
+  ppmm: number,
+  editable: Editable,
+  onChange?: (e: Editable) => void
+) => {
   const moved = useRef<boolean>(false);
   const panStartX = useRef<number>(0);
   const panStartY = useRef<number>(0);
@@ -19,10 +22,10 @@ export default (props: Props) => {
   const handlePanStart: PanStartCallback = useCallback(
     (_x: number, _y: number, _touch: boolean) => {
       moved.current = false;
-      panStartX.current = x;
-      panStartY.current = y;
+      panStartX.current = field.x;
+      panStartY.current = field.y;
     },
-    [x, y]
+    [field]
   );
 
   const handlePanMove: PanMoveCallback = useCallback(
@@ -43,18 +46,32 @@ export default (props: Props) => {
       panStartX.current += dx / ppmm;
       panStartY.current += dy / ppmm;
 
-      setX(panStartX.current);
-      setY(panStartY.current);
+      if (onChange) {
+        // FIXME: this is wrong implementation.
+        const newEditable = {
+          ...editable,
+          fields: [
+            {
+              ...editable.fields[0],
+              x: panStartX.current,
+              y: panStartY.current
+            }
+          ]
+        };
+        onChange(newEditable);
+      }
     },
-    [ppmm]
+    [ppmm, editable, onChange]
   );
 
-  const pannableRef = usePannableRef(
-    handlePanStart,
-    handlePanMove,
-    undefined,
-    undefined
-  );
+  return usePannableRef(handlePanStart, handlePanMove, undefined, undefined);
+};
+
+export default (props: Props) => {
+  const { editable, onChange, field, ppmm } = props;
+
+  const pannableRef = MovePannableRef(field, ppmm, editable, onChange);
+
   const imageShift =
     field.imageRotation % 2 === 1
       ? ((field.imageRotation === 3 ? -1 : 1) *
@@ -68,8 +85,8 @@ export default (props: Props) => {
       data-testid={`field-${field.id}`}
       style={{
         position: 'absolute',
-        top: y * ppmm,
-        left: x * ppmm,
+        top: field.y * ppmm,
+        left: field.x * ppmm,
         width: field.width * ppmm,
         height: field.height * ppmm,
         transform: `rotate(${field.angle}rad)`

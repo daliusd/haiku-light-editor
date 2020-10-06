@@ -8,7 +8,7 @@ const marginsDefaults: Margins = {
   horizontal: 10
 };
 
-export const Editor = ({ settings, editable }: Props) => {
+export const Editor = ({ settings, editable, onChange }: Props) => {
   const { width, height, backgroundColor } = settings;
   const margins = settings.margins || marginsDefaults;
   const ppmm = Math.min(
@@ -44,7 +44,13 @@ export const Editor = ({ settings, editable }: Props) => {
       >
         {editable.fields &&
           editable.fields.map((field) => (
-            <FieldComponent key={field.id} field={field} ppmm={ppmm} />
+            <FieldComponent
+              key={field.id}
+              editable={editable}
+              field={field}
+              ppmm={ppmm}
+              onChange={onChange}
+            />
           ))}
       </div>
     </div>
