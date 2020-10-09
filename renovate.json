@@ -4,5 +4,10 @@
   ],
   "ignorePaths": [
     "example/package.json"
+  ],
+  "packageRules": [
+    {
+      "automerge": true
+    }
   ]
 }
