@@ -15,7 +15,8 @@ describe('Editor', () => {
 
   const editable: Editable = {
     width: 20,
-    height: 20
+    height: 20,
+    fields: []
   };
 
   const imageField: ImageField = {
