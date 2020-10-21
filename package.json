@@ -37,7 +37,7 @@
     "@types/jest": "26.0.15",
     "@types/jest-environment-puppeteer": "4.4.0",
     "@types/pixelmatch": "5.2.2",
-    "@types/node": "12.12.69",
+    "@types/node": "12.12.70",
     "@types/pngjs": "3.4.2",
     "@types/react": "16.9.53",
     "@types/puppeteer": "3.0.2",
